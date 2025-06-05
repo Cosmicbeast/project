@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TravelEase - Book Flights, Hotels, Holidays</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .top-bar {
+            background-color: #003580;
+            color: white;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+        
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .contact-info a {
+            color: white;
+            text-decoration: none;
+            margin-right: 15px;
+        }
+        
+        .user-actions a {
+            color: white;
+            text-decoration: none;
+            margin-left: 15px;
+        }
+        
+        .main-header {
+            padding: 15px 0;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #003580;
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: #ff9e00;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 25px;
+        }
+        
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .nav-links i {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #ff9e00;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #e68a00;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
+            height: 500px;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hero-content {
+            width: 100%;
+        }
+        
+        .booking-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            margin-right: 10px;
+            border-radius: 5px 5px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #003580;
+        }
+        
+        .booking-form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 1000px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-btn {
+            width: 100%;
+            padding: 15px;
+            background: #ff9e00;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .search-btn:hover {
+            background: #e68a00;
+        }
+        
+        /* Deals Section */
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 32px;
+            color: #003580;
+            margin-bottom: 10px;
+        }
+        
+        .deals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .deal-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .deal-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .deal-img {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .deal-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .deal-card:hover .deal-img img {
+            transform: scale(1.05);
+        }
+        
+        .deal-info {
+            padding: 20px;
+        }
+        
+        .deal-info h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #003580;
+        }
+        
+        .deal-price {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff9e00;
+            margin-bottom: 15px;
+        }
+        
+        .deal-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Offers Section */
+        .offers-slider {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding-bottom: 20px;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .offer-card {
+            min-width: 300px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            scroll-snap-align: start;
+        }
+        
+        .offer-img {
+            height: 150px;
+            overflow: hidden;
+        }
+        
+        .offer-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .offer-details {
+            padding: 15px;
+        }
+        
+        .offer-details h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #003580;
+        }
+        
+        .offer-details p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+        
+        .offer-code {
+            display: inline-block;
+            background: #f0f8ff;
+            color: #003580;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        /* Testimonials */
+        .testimonials {
+            background: #f0f8ff;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .testimonial-text::before {
+            content: '"';
+            font-size: 60px;
+            color: #ff9e00;
+            opacity: 0.2;
+            position: absolute;
+            top: -20px;
+            left: -15px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        
+        .author-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            color: #003580;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #003580;
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 2px;
+            background: #ff9e00;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #ff9e00;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .social-links a {
+            color: white;
+            font-size: 20px;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #ff9e00;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 14px;
+            color: #aaa;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 5px 10px;
+            }
+            
+            .hero {
+                height: auto;
+                padding: 60px 0;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .top-bar-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .contact-info, .user-actions {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="top-bar">
+            <div class="container top-bar-content">
+                <div class="contact-info">
+                    <a href="#"><i class="fas fa-phone"></i> +1 234 567 890</a>
+                    <a href="#"><i class="fas fa-envelope"></i> support@travelease.com</a>
+                </div>
+                <div class="user-actions">
+                    <a href="#"><i class="fas fa-user"></i> Sign In</a>
+                    <a href="#"><i class="fas fa-user-plus"></i> Register</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-header">
+            <div class="container header-content">
+                <a href="#" class="logo">Travel<span>Ease</span></a>
+                
+                <ul class="nav-links">
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-plane"></i>
+                            <span>Flights</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-hotel"></i>
+                            <span>Hotels</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>Holidays</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-train"></i>
+                            <span>Trains</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-taxi"></i>
+                            <span>Cabs</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fas fa-passport"></i>
+                            <span>Visa</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <a href="#" class="btn">My Bookings</a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section with Booking Form -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="booking-tabs">
+                <div class="tab active">Flights</div>
+                <div class="tab">Hotels</div>
+                <div class="tab">Holidays</div>
+                <div class="tab">Trains</div>
+            </div>
+            
+            <div class="booking-form">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="from">From</label>
+                            <input type="text" id="from" placeholder="City or Airport">
+                        </div>
+                        <div class="form-group">
+                            <label for="to">To</label>
+                            <input type="text" id="to" placeholder="City or Airport">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="departure">Departure</label>
+                            <input type="date" id="departure">
+                        </div>
+                        <div class="form-group">
+                            <label for="return">Return</label>
+                            <input type="date" id="return">
+                        </div>
+                        <div class="form-group">
+                            <label for="travelers">Travelers & Class</label>
+                            <select id="travelers">
+                                <option value="1">1 Adult, Economy</option>
+                                <option value="2">2 Adults, Economy</option>
+                                <option value="3">3 Adults, Economy</option>
+                                <option value="4">1 Adult, Business</option>
+                                <option value="5">2 Adults, Business</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="search-btn">SEARCH FLIGHTS</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Deals Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Hot Deals</h2>
+                <p>Book these popular destinations at special prices</p>
+            </div>
+            
+            <div class="deals-grid">
+                <div class="deal-card">
+                    <div class="deal-img">
+                        <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Bali">
+                    </div>
+                    <div class="deal-info">
+                        <h3>Bali, Indonesia</h3>
+                        <div class="deal-price">$699</div>
+                        <div class="deal-meta">
+                            <span><i class="fas fa-plane"></i> Flight + Hotel</span>
+                            <span><i class="fas fa-calendar"></i> 7 Days</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="deal-card">
+                    <div class="deal-img">
+                        <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Paris">
+                    </div>
+                    <div class="deal-info">
+                        <h3>Paris, France</h3>
+                        <div class="deal-price">$899</div>
+                        <div class="deal-meta">
+                            <span><i class="fas fa-plane"></i> Flight + Hotel</span>
+                            <span><i class="fas fa-calendar"></i> 5 Days</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="deal-card">
+                    <div class="deal-img">
+                        <img src="https://images.unsplash.com/photo-1503917988258-f87a78e3c995?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1587&q=80" alt="Dubai">
+                    </div>
+                    <div class="deal-info">
+                        <h3>Dubai, UAE</h3>
+                        <div class="deal-price">$799</div>
+                        <div class="deal-meta">
+                            <span><i class="fas fa-plane"></i> Flight + Hotel</span>
+                            <span><i class="fas fa-calendar"></i> 6 Days</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="deal-card">
+                    <div class="deal-img">
+                        <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80" alt="Maldives">
+                    </div>
+                    <div class="deal-info">
+                        <h3>Maldives</h3>
+                        <div class="deal-price">$1299</div>
+                        <div class="deal-meta">
+                            <span><i class="fas fa-plane"></i> Flight + Resort</span>
+                            <span><i class="fas fa-calendar"></i> 7 Days</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Offers Section -->
+    <section class="section" style="background-color: #f9f9f9;">
+        <div class="container">
+            <div class="section-title">
+                <h2>Special Offers</h2>
+                <p>Limited time discounts and promo codes</p>
+            </div>
+            
+            <div class="offers-slider">
+                <div class="offer-card">
+                    <div class="offer-img">
+                        <img src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Summer Sale">
+                    </div>
+                    <div class="offer-details">
+                        <h3>Summer Vacation Sale</h3>
+                        <p>Get 20% off on all international flights booked before June 30th.</p>
+                        <span class="offer-code">SUMMER20</span>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-img">
+                        <img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Hotel Discount">
+                    </div>
+                    <div class="offer-details">
+                        <h3>Luxury Hotel Discount</h3>
+                        <p>Book 4 nights at any 5-star hotel and get 1 night free.</p>
+                        <span class="offer-code">LUXURY1FREE</span>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-img">
+                        <img src="https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Early Bird">
+                    </div>
+                    <div class="offer-details">
+                        <h3>Early Bird Special</h3>
+                        <p>Book your winter holiday now and save up to 30% on packages.</p>
+                        <span class="offer-code">EARLYBIRD30</span>
+                    </div>
+                </div>
+                
+                <div class="offer-card">
+                    <div class="offer-img">
+                        <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1920&q=80" alt="Family Package">
+                    </div>
+                    <div class="offer-details">
+                        <h3>Family Package Deal</h3>
+                        <p>Special rates for family bookings (2 adults + 2 children).</p>
+                        <span class="offer-code">FAMILY25</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="section testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <p>Hear from travelers who've booked with us</p>
+            </div>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Amazing service! The hotel was exactly as described and the flights were perfectly timed. Will definitely use TravelEase again for my next vacation.
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/women/65.jpg" alt="Sarah Johnson">
+                        </div>
+                        <div class="author-info">
+                            <h4>Sarah Johnson</h4>
+                            <p>New York, USA</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        Got a great deal on our honeymoon package to Bali. The customer service team was very helpful in customizing our itinerary. Highly recommended!
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Michael Chen">
+                        </div>
+                        <div class="author-info">
+                            <h4>Michael Chen</h4>
+                            <p>Toronto, Canada</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        The booking process was so easy and the prices were better than other sites I checked. Our family holiday to Dubai was unforgettable!
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-img">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Priya Patel">
+                        </div>
+                        <div class="author-info">
+                            <h4>Priya Patel</h4>
+                            <p>London, UK</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Flight Booking</a></li>
+                        <li><a href="#">Hotel Booking</a></li>
+                        <li><a href="#">Holiday Packages</a></li>
+                        <li><a href="#">Train Tickets</a></li>
+                        <li><a href="#">Cab Services</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Cancellation Policy</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                    
+                    <h3 style="margin-top: 30px;">Download Our App</h3>
+                    <div style="display: flex; gap: 10px; margin-top: 15px;">
+                        <a href="#"><img src="https://via.placeholder.com/120x40/003580/ffffff?text=App+Store" alt="App Store" style="border-radius: 5px;"></a>
+                        <a href="#"><img src="https://via.placeholder.com/120x40/003580/ffffff?text=Google+Play" alt="Google Play" style="border-radius: 5px;"></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 TravelEase. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Simple tab switching functionality
+        const tabs = document.querySelectorAll('.tab');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+            });
+        });
+        
+        // Current date for departure field
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        document.getElementById('departure').valueAsDate = tomorrow;
+        
+        // Return date 7 days after departure
+        const nextWeek = new Date(tomorrow);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        document.getElementById('return').valueAsDate = nextWeek;
+    </script>
+</body>
+</html>
