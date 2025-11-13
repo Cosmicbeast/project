@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mudra - Indian Sign Language Detection System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'mu-primary': '#2a4365',
+                        'mu-accent': '#FF9933',
+                        'mu-bg': '#f3f4f6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="bg-mu-bg font-sans min-h-screen flex">
+    <div id="sidebar" class="w-64 bg-mu-primary text-white flex flex-col p-4 shadow-xl z-10 transition-all duration-300 md:relative fixed inset-y-0 left-0 transform -translate-x-full md:translate-x-0">
+        <div class="mb-8 text-center">
+            <h1 class="text-3xl font-bold tracking-wider">MUDRA</h1>
+            <p class="text-sm text-mu-accent">ISL System</p>
+        </div>
+        <nav class="flex-grow space-y-2">
+            <button id="nav-detection" data-target="detection-dashboard" class="w-full text-left py-3 px-4 rounded-lg hover:bg-amber-600 transition duration-150 ease-in-out mu-active-tab">Detection & Output</button>
+            <button id="nav-dataset" data-target="dataset-dashboard" class="w-full text-left py-3 px-4 rounded-lg hover:bg-amber-600 transition duration-150 ease-in-out">Dataset Upload</button>
+            <button id="nav-results" data-target="results-dashboard" class="w-full text-left py-3 px-4 rounded-lg hover:bg-amber-600 transition duration-150 ease-in-out">Results & Metrics</button>
+        </nav>
+        <div class="mt-auto pt-4 border-t border-mu-accent/50">
+            <p class="text-sm text-center text-gray-300">© 2025 Mudra System</p>
+        </div>
+    </div>
+    <div class="flex-1 p-4 md:p-8 overflow-y-auto">
+        <button id="menu-toggle" class="md:hidden p-2 text-mu-primary mb-4 rounded-full bg-white shadow">☰</button>
+        <header class="mb-8">
+            <h2 class="text-3xl font-extrabold text-gray-900">Mudra Dashboard</h2>
+        </header>
+        <div id="dashboard-container" class="space-y-8">
+            <div id="detection-dashboard" class="dashboard-panel active grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white rounded-xl p-6 mu-card">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Live ISL Recognition</h3>
+                    <div id="video-feed" class="w-full h-96 bg-gray-900 rounded-lg flex items-center justify-center mb-4 border-4 border-mu-accent/50 shadow-inner">
+                        <img id="video-stream" src="" class="w-full h-full object-contain rounded-lg hidden">
+                        <span id="video-placeholder" class="text-white text-lg font-mono">Webcam Stream Placeholder</span>
+                    </div>
+                    <div class="flex justify-between items-center mt-6">
+                        <button id="start-detection" class="bg-mu-primary text-white py-2 px-6 rounded-full font-semibold hover:bg-mu-primary/90 transition shadow-lg">Start Detection</button>
+                        <span id="detection-status" class="text-sm font-medium text-green-600">Status: Ready</span>
+                    </div>
+                </div>
+                <div class="lg:col-span-1 space-y-8">
+                    <div class="bg-white rounded-xl p-6 mu-card">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Text Translation</h3>
+                        <div id="text-output" class="bg-gray-100 p-4 min-h-[100px] rounded-lg text-lg text-gray-700 border border-gray-200">(Translated ISL signs will appear here...)</div>
+                    </div>
+                    <div class="bg-white rounded-xl p-6 mu-card">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">Speech Output</h3>
+                        <button id="speech-button" class="w-full bg-mu-accent text-white py-3 rounded-full font-bold hover:bg-mu-accent/90 transition shadow-lg"><span id="speech-text">Click to Speak Last Sentence</span></button>
+                    </div>
+                </div>
+            </div>
+            <div id="dataset-dashboard" class="dashboard-panel hidden">
+                <div class="bg-white rounded-xl p-8 mu-card max-w-4xl mx-auto space-y-6">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-4">Upload Dataset to Google Drive</h3>
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Google Drive Folder ID (Optional)</label>
+                        <input id="folder-id" type="text" placeholder="Leave empty for root folder" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-mu-accent focus:border-transparent">
+                        <p class="text-xs text-gray-500 mt-1">Get folder ID from Drive URL: drive.google.com/drive/folders/[FOLDER_ID]</p>
+                    </div>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-10 text-center hover:border-mu-accent transition duration-300">
+                        <p class="mt-1 text-sm text-gray-600">Drag and drop your ISL image/video files here, or</p>
+                        <label for="file-upload" class="cursor-pointer font-medium text-mu-accent hover:text-mu-accent/80 transition duration-150">Browse files</label>
+                        <input id="file-upload" type="file" multiple class="hidden">
+                    </div>
+                    <div id="file-list" class="space-y-3 pt-4">
+                        <p class="font-medium text-gray-700">Selected Files (0)</p>
+                    </div>
+                    <div class="flex justify-end pt-4 border-t">
+                        <button id="upload-button" class="bg-mu-accent text-white py-2 px-6 rounded-full font-semibold hover:bg-mu-accent/90 transition shadow-lg disabled:opacity-50" disabled>Upload to Google Drive</button>
+                    </div>
+                    <div id="upload-status" class="mt-4 text-sm text-gray-600"></div>
+                </div>
+            </div>
+            <div id="results-dashboard" class="dashboard-panel hidden">
+                <div class="bg-white rounded-xl p-6 mu-card">
+                    <h3 class="text-2xl font-bold text-gray-800 border-b pb-4 mb-6">Detection History & Metrics</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-mu-primary/10 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Total Detections</p>
+                            <p id="total-detections" class="text-3xl font-bold text-mu-primary">0</p>
+                        </div>
+                        <div class="bg-green-100 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Avg Confidence</p>
+                            <p id="avg-confidence" class="text-3xl font-bold text-green-700">0%</p>
+                        </div>
+                        <div class="bg-mu-accent/10 p-4 rounded-lg">
+                            <p class="text-sm text-gray-600">Most Detected</p>
+                            <p id="most-detected" class="text-xl font-bold text-mu-accent">-</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="text-lg font-semibold text-gray-700">Recent Detections</h4>
+                        <button id="clear-history" class="text-sm bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600">Clear History</button>
+                    </div>
+                    <div id="detection-history" class="space-y-2 max-h-96 overflow-y-auto">
+                        <p class="text-gray-500 text-center py-8">No detections yet</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modal-container" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg p-6 shadow-2xl max-w-sm w-full">
+            <h3 id="modal-title" class="text-xl font-bold text-mu-primary mb-3">Notification</h3>
+            <p id="modal-message" class="text-gray-700 mb-4"></p>
+            <button id="modal-close" class="w-full bg-mu-accent text-white py-2 rounded-lg hover:bg-mu-accent/90 transition">OK</button>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+0 STOP
+1 write
+2 Where
+3 Good Morning
+4 namaste
+5 opinion

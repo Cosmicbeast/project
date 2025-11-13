@@ -1,0 +1,10 @@
+flask
+flask-cors
+opencv-python
+numpy
+tensorflow
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
+supabase
